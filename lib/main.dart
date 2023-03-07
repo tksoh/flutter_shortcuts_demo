@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ScrollUpIntend extends Intent {}
 
@@ -38,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   int listSize = 40;
   int selectedIndex = -1;
+  final itemScrollController = ItemScrollController();
 
   void _incrementCounter() {
     setState(() {
@@ -62,7 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onInvoke: (intent) {
                 setState(() {
                   _counter++;
-                  if (selectedIndex > 0) selectedIndex--;
+                  if (selectedIndex > 0) {
+                    selectedIndex--;
+                    scrollToSelectedIndex();
+                  }
                 });
                 return null;
               },
@@ -71,7 +76,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onInvoke: (intent) {
                 setState(() {
                   _counter--;
-                  if (selectedIndex < listSize - 1) selectedIndex++;
+                  if (selectedIndex < listSize - 1) {
+                    selectedIndex++;
+                    scrollToSelectedIndex();
+                  }
                 });
                 return null;
               },
@@ -90,7 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   Expanded(
-                    child: ListView.builder(
+                    child: ScrollablePositionedList.builder(
+                      itemScrollController: itemScrollController,
                       itemCount: listSize,
                       itemBuilder: (context, index) {
                         return Material(
@@ -120,6 +129,13 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void scrollToSelectedIndex() {
+    itemScrollController.scrollTo(
+      index: selectedIndex,
+      duration: const Duration(milliseconds: 300),
     );
   }
 }
