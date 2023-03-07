@@ -93,16 +93,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ListView.builder(
                       itemCount: listSize,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text('$index'),
-                          tileColor: selectedIndex == index
-                              ? Colors.blue.shade200
-                              : null,
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
+                        return Material(
+                          child: ListTile(
+                            title: Text('$index'),
+                            tileColor: selectedIndex == index
+                                ? Colors.blue.shade200
+                                : null,
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                            },
+                          ),
                         );
                       },
                     ),
