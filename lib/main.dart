@@ -36,6 +36,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int listSize = 40;
+  int selectedIndex = -1;
 
   void _incrementCounter() {
     setState(() {
@@ -60,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onInvoke: (intent) {
                 setState(() {
                   _counter++;
+                  if (selectedIndex > 0) selectedIndex--;
                 });
                 return null;
               },
@@ -68,25 +71,44 @@ class _MyHomePageState extends State<MyHomePage> {
               onInvoke: (intent) {
                 setState(() {
                   _counter--;
+                  if (selectedIndex < listSize - 1) selectedIndex++;
                 });
                 return null;
               },
             ),
           },
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'You have pushed the button this many times:',
-                ),
-                Focus(
-                  child: Text(
+          child: Focus(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    'You have pushed the button this many times:',
+                  ),
+                  Text(
                     '$_counter',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: listSize,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text('$index'),
+                          tileColor: selectedIndex == index
+                              ? Colors.blue.shade200
+                              : null,
+                          onTap: () {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
